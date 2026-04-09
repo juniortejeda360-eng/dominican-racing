@@ -1,0 +1,653 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --dr-red: #CC0000;
+    --dr-red-dark: #990000;
+    --dr-black: #0a0a0a;
+    --dr-dark: #111111;
+    --dr-dark2: #1a1a1a;
+    --dr-dark3: #222222;
+    --dr-white: #f5f5f5;
+    --dr-gray: #888;
+    --dr-border: #2a2a2a;
+  }
+  body { background: var(--dr-black); color: var(--dr-white); font-family: 'Arial', sans-serif; }
+  .site { background: var(--dr-black); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--dr-black); border-bottom: 3px solid var(--dr-red); position: sticky; top: 0; z-index: 100; }
+  .nav-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; }
+  .logo { display: flex; flex-direction: column; }
+  .logo-main { font-size: 22px; font-weight: 900; color: var(--dr-white); letter-spacing: 2px; line-height: 1; text-transform: uppercase; }
+  .logo-main span { color: var(--dr-red); }
+  .logo-sub { font-size: 9px; color: var(--dr-gray); letter-spacing: 3px; text-transform: uppercase; margin-top: 2px; }
+  .nav-date { font-size: 11px; color: var(--dr-gray); letter-spacing: 1px; }
+  .nav-links { display: flex; overflow-x: auto; padding: 0 20px; gap: 2px; scrollbar-width: none; }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-btn { background: none; border: none; color: var(--dr-gray); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 14px; cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .nav-btn:hover, .nav-btn.active { color: var(--dr-white); border-bottom-color: var(--dr-red); }
+  .nav-btn.active { color: var(--dr-red); }
+
+  /* SECTIONS */
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 50%, #0a0a0a 100%); padding: 0; }
+  .hero-banner { background: var(--dr-red); padding: 8px 20px; display: flex; align-items: center; gap: 12px; }
+  .breaking-tag { background: var(--dr-black); color: var(--dr-red); font-size: 10px; font-weight: 900; padding: 3px 8px; letter-spacing: 2px; text-transform: uppercase; flex-shrink: 0; }
+  .breaking-text { font-size: 12px; font-weight: 700; color: var(--dr-white); letter-spacing: 0.5px; }
+  .hero-main { padding: 30px 20px 20px; text-align: center; border-bottom: 1px solid var(--dr-border); }
+  .hero-eyebrow { font-size: 10px; color: var(--dr-red); letter-spacing: 4px; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+  .hero-title { font-size: 32px; font-weight: 900; color: var(--dr-white); letter-spacing: -1px; line-height: 1.1; text-transform: uppercase; margin-bottom: 8px; }
+  .hero-title span { color: var(--dr-red); }
+  .hero-subtitle { font-size: 13px; color: var(--dr-gray); letter-spacing: 0.5px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
+
+  /* NEWS GRID */
+  .section-label { display: flex; align-items: center; gap: 12px; padding: 20px 20px 12px; }
+  .section-label-text { font-size: 11px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: var(--dr-red); }
+  .section-label-line { flex: 1; height: 1px; background: var(--dr-border); }
+  .featured-grid { padding: 0 20px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .featured-card { background: var(--dr-dark2); border: 1px solid var(--dr-border); cursor: pointer; overflow: hidden; transition: border-color 0.2s; }
+  .featured-card:hover { border-color: var(--dr-red); }
+  .featured-card.big { grid-column: 1 / -1; }
+  .card-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--dr-dark3); position: relative; overflow: hidden; }
+  .card-img-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--dr-dark3); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .card-img-placeholder::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(204,0,0,0.05) 20px, rgba(204,0,0,0.05) 40px); }
+  .car-icon { font-size: 36px; opacity: 0.3; }
+  .card-cat { display: inline-block; background: var(--dr-red); color: var(--dr-white); font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; padding: 3px 8px; margin: 10px 10px 0; }
+  .card-title { font-size: 14px; font-weight: 900; color: var(--dr-white); padding: 8px 10px; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.3px; }
+  .featured-card.big .card-title { font-size: 18px; }
+  .card-meta { padding: 0 10px 10px; font-size: 10px; color: var(--dr-gray); display: flex; gap: 8px; }
+
+  /* VIDEO SECTION */
+  .video-section { padding: 0 20px 20px; }
+  .video-placeholder { background: var(--dr-dark2); border: 1px solid var(--dr-border); aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: border-color 0.2s; }
+  .video-placeholder:hover { border-color: var(--dr-red); }
+  .play-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--dr-red); display: flex; align-items: center; justify-content: center; }
+  .play-icon { width: 0; height: 0; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-left: 20px solid white; margin-left: 4px; }
+  .video-label { font-size: 13px; font-weight: 700; color: var(--dr-white); letter-spacing: 1px; text-transform: uppercase; }
+  .video-sublabel { font-size: 11px; color: var(--dr-gray); }
+
+  /* ARTICLES LIST */
+  .articles-list { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 1px; }
+  .article-item { background: var(--dr-dark2); border: 1px solid var(--dr-border); padding: 14px; display: flex; gap: 12px; cursor: pointer; transition: border-color 0.2s; }
+  .article-item:hover { border-color: var(--dr-red); }
+  .art-num { font-size: 28px; font-weight: 900; color: var(--dr-red); opacity: 0.4; min-width: 32px; line-height: 1; }
+  .art-content { flex: 1; }
+  .art-cat { font-size: 9px; font-weight: 900; color: var(--dr-red); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .art-title { font-size: 13px; font-weight: 700; color: var(--dr-white); line-height: 1.3; text-transform: uppercase; }
+  .art-meta { font-size: 10px; color: var(--dr-gray); margin-top: 4px; }
+
+  /* NOTICIAS PAGE */
+  .news-page { padding: 20px; }
+  .categories-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 16px; scrollbar-width: none; }
+  .categories-bar::-webkit-scrollbar { display: none; }
+  .cat-pill { background: var(--dr-dark2); border: 1px solid var(--dr-border); color: var(--dr-gray); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 12px; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
+  .cat-pill:hover, .cat-pill.active { background: var(--dr-red); border-color: var(--dr-red); color: var(--dr-white); }
+  .news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .news-card { background: var(--dr-dark2); border: 1px solid var(--dr-border); cursor: pointer; transition: border-color 0.2s; }
+  .news-card:hover { border-color: var(--dr-red); }
+  .news-card-img { width: 100%; aspect-ratio: 4/3; background: var(--dr-dark3); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .news-card-img::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(204,0,0,0.04) 15px, rgba(204,0,0,0.04) 30px); }
+  .news-card-body { padding: 10px; }
+  .news-cat { font-size: 9px; font-weight: 900; color: var(--dr-red); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+  .news-title { font-size: 12px; font-weight: 700; color: var(--dr-white); line-height: 1.3; text-transform: uppercase; }
+  .news-excerpt { font-size: 11px; color: var(--dr-gray); margin-top: 4px; line-height: 1.5; }
+  .news-meta { font-size: 10px; color: var(--dr-gray); margin-top: 6px; display: flex; justify-content: space-between; }
+
+  /* OPINION */
+  .opinion-page { padding: 20px; }
+  .columnist-header { background: var(--dr-dark2); border: 1px solid var(--dr-border); border-left: 4px solid var(--dr-red); padding: 16px; margin-bottom: 16px; display: flex; gap: 14px; align-items: center; }
+  .columnist-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--dr-red); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: var(--dr-white); flex-shrink: 0; }
+  .columnist-info h3 { font-size: 16px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; }
+  .columnist-info p { font-size: 11px; color: var(--dr-gray); margin-top: 2px; }
+  .columnist-info span { font-size: 10px; color: var(--dr-red); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .opinion-articles { display: flex; flex-direction: column; gap: 12px; }
+  .opinion-card { background: var(--dr-dark2); border: 1px solid var(--dr-border); border-left: 3px solid var(--dr-red); padding: 16px; cursor: pointer; transition: border-color 0.2s; }
+  .opinion-card:hover { border-color: var(--dr-red); border-left-color: var(--dr-red); }
+  .opinion-card-tag { font-size: 9px; font-weight: 900; color: var(--dr-red); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .opinion-card-title { font-size: 15px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; line-height: 1.2; margin-bottom: 8px; }
+  .opinion-card-text { font-size: 12px; color: var(--dr-gray); line-height: 1.7; }
+  .opinion-card-meta { font-size: 10px; color: var(--dr-gray); margin-top: 10px; border-top: 1px solid var(--dr-border); padding-top: 8px; }
+
+  /* VIDEOS */
+  .videos-page { padding: 20px; }
+  .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .video-card { background: var(--dr-dark2); border: 1px solid var(--dr-border); cursor: pointer; transition: border-color 0.2s; overflow: hidden; }
+  .video-card:hover { border-color: var(--dr-red); }
+  .video-thumb { width: 100%; aspect-ratio: 16/9; background: var(--dr-dark3); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .video-thumb::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(30deg, transparent, transparent 18px, rgba(204,0,0,0.05) 18px, rgba(204,0,0,0.05) 36px); }
+  .mini-play { width: 36px; height: 36px; border-radius: 50%; background: rgba(204,0,0,0.9); display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+  .mini-play-icon { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 12px solid white; margin-left: 2px; }
+  .video-card-body { padding: 10px; }
+  .video-card-title { font-size: 12px; font-weight: 700; color: var(--dr-white); text-transform: uppercase; line-height: 1.3; }
+  .video-card-meta { font-size: 10px; color: var(--dr-gray); margin-top: 4px; }
+  .video-duration { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.85); color: var(--dr-white); font-size: 10px; font-weight: 700; padding: 2px 6px; z-index: 1; }
+
+  /* SEGURIDAD */
+  .seguridad-page { padding: 20px; }
+  .safety-hero { background: var(--dr-dark2); border: 1px solid var(--dr-border); border-top: 4px solid var(--dr-red); padding: 20px; text-align: center; margin-bottom: 16px; }
+  .safety-hero h2 { font-size: 22px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; letter-spacing: 1px; }
+  .safety-hero p { font-size: 12px; color: var(--dr-gray); margin-top: 8px; line-height: 1.6; }
+  .safety-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .safety-card { background: var(--dr-dark2); border: 1px solid var(--dr-border); padding: 16px; }
+  .safety-icon { width: 36px; height: 36px; background: var(--dr-red); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+  .safety-icon-sym { font-size: 18px; }
+  .safety-card h4 { font-size: 12px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .safety-card p { font-size: 11px; color: var(--dr-gray); line-height: 1.6; }
+
+  /* MUNDO RACING */
+  .racing-page { padding: 20px; }
+  .championship-banner { background: var(--dr-dark2); border: 1px solid var(--dr-border); padding: 14px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
+  .champ-logo { width: 44px; height: 44px; background: var(--dr-red); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: var(--dr-white); text-align: center; line-height: 1.1; flex-shrink: 0; }
+  .champ-info h3 { font-size: 14px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; }
+  .champ-info p { font-size: 11px; color: var(--dr-gray); margin-top: 2px; }
+  .champ-info span { font-size: 10px; color: var(--dr-red); font-weight: 700; }
+  .racing-news { display: flex; flex-direction: column; gap: 1px; }
+  .racing-item { background: var(--dr-dark2); border: 1px solid var(--dr-border); padding: 12px 14px; display: flex; gap: 10px; cursor: pointer; transition: border-color 0.2s; }
+  .racing-item:hover { border-color: var(--dr-red); }
+  .racing-item-img { width: 70px; height: 50px; background: var(--dr-dark3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+  .racing-item-img::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(204,0,0,0.08) 8px, rgba(204,0,0,0.08) 16px); }
+  .ri-cat { font-size: 9px; font-weight: 900; color: var(--dr-red); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+  .ri-title { font-size: 12px; font-weight: 700; color: var(--dr-white); text-transform: uppercase; line-height: 1.3; }
+  .ri-meta { font-size: 10px; color: var(--dr-gray); margin-top: 3px; }
+
+  /* SOBRE NOSOTROS */
+  .about-page { padding: 20px; }
+  .about-hero { background: var(--dr-dark2); border: 1px solid var(--dr-border); border-top: 4px solid var(--dr-red); padding: 24px 20px; text-align: center; margin-bottom: 16px; }
+  .about-hero h2 { font-size: 24px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; letter-spacing: 2px; }
+  .about-hero p { font-size: 13px; color: var(--dr-gray); line-height: 1.8; margin-top: 12px; }
+  .about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat-box { background: var(--dr-dark2); border: 1px solid var(--dr-border); padding: 16px 10px; text-align: center; }
+  .stat-num { font-size: 24px; font-weight: 900; color: var(--dr-red); }
+  .stat-label { font-size: 10px; color: var(--dr-gray); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .about-mission { background: var(--dr-dark2); border: 1px solid var(--dr-border); border-left: 4px solid var(--dr-red); padding: 16px; }
+  .about-mission h3 { font-size: 13px; font-weight: 900; color: var(--dr-red); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+  .about-mission p { font-size: 12px; color: var(--dr-gray); line-height: 1.8; }
+
+  /* CONTACTO */
+  .contact-page { padding: 20px; }
+  .contact-form { background: var(--dr-dark2); border: 1px solid var(--dr-border); padding: 20px; margin-bottom: 16px; }
+  .contact-form h2 { font-size: 16px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; border-bottom: 1px solid var(--dr-border); padding-bottom: 10px; }
+  .form-group { margin-bottom: 12px; }
+  .form-label { font-size: 10px; font-weight: 700; color: var(--dr-gray); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+  .form-input { width: 100%; background: var(--dr-dark3); border: 1px solid var(--dr-border); color: var(--dr-white); font-size: 13px; padding: 10px 12px; }
+  .form-input:focus { outline: none; border-color: var(--dr-red); }
+  textarea.form-input { min-height: 80px; resize: vertical; }
+  .submit-btn { background: var(--dr-red); border: none; color: var(--dr-white); font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; padding: 12px 24px; cursor: pointer; width: 100%; transition: background 0.2s; }
+  .submit-btn:hover { background: var(--dr-red-dark); }
+  .social-links { background: var(--dr-dark2); border: 1px solid var(--dr-border); padding: 16px; }
+  .social-links h3 { font-size: 12px; font-weight: 900; color: var(--dr-white); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .social-btn { background: var(--dr-dark3); border: 1px solid var(--dr-border); color: var(--dr-gray); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .social-btn:hover { border-color: var(--dr-red); color: var(--dr-white); }
+
+  /* FOOTER */
+  footer { background: var(--dr-dark); border-top: 3px solid var(--dr-red); padding: 20px; text-align: center; margin-top: 20px; }
+  .footer-logo { font-size: 18px; font-weight: 900; color: var(--dr-white); letter-spacing: 2px; }
+  .footer-logo span { color: var(--dr-red); }
+  .footer-copy { font-size: 10px; color: var(--dr-gray); margin-top: 8px; letter-spacing: 1px; }
+  .footer-links { display: flex; justify-content: center; gap: 16px; margin-top: 10px; }
+  .footer-link { font-size: 10px; color: var(--dr-gray); text-transform: uppercase; letter-spacing: 1px; cursor: pointer; }
+  .footer-link:hover { color: var(--dr-red); }
+</style>
+
+<div class="site">
+<nav>
+  <div class="nav-top">
+    <div class="logo">
+      <div class="logo-main">DOMINICAN <span>RACING</span></div>
+      <div class="logo-sub">El mundo motor sin filtros</div>
+    </div>
+    <div class="nav-date" id="nav-date"></div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showSection('inicio', this)">Inicio</button>
+    <button class="nav-btn" onclick="showSection('noticias', this)">Noticias</button>
+    <button class="nav-btn" onclick="showSection('opinion', this)">Opinión</button>
+    <button class="nav-btn" onclick="showSection('videos', this)">Videos</button>
+    <button class="nav-btn" onclick="showSection('seguridad', this)">Seguridad Vial</button>
+    <button class="nav-btn" onclick="showSection('racing', this)">Mundo Racing</button>
+    <button class="nav-btn" onclick="showSection('sobre', this)">Sobre Nosotros</button>
+    <button class="nav-btn" onclick="showSection('contacto', this)">Contacto</button>
+  </div>
+</nav>
+
+<!-- INICIO -->
+<div class="section active" id="s-inicio">
+  <div class="hero">
+    <div class="hero-banner">
+      <div class="breaking-tag">&#9632; EN VIVO</div>
+      <div class="breaking-text">Temporada 2025 de MotoGP arranca con drama en Qatar — Márquez lidera el campeonato</div>
+    </div>
+    <div class="hero-main">
+      <div class="hero-eyebrow">&#9632; El medio del motor dominicano</div>
+      <div class="hero-title">DOMINICAN <span>RACING</span></div>
+      <div class="hero-subtitle">Noticias del mundo motor en RD y el mundo — Información real, sin filtros, sobre carreras, seguridad vial y actualidad</div>
+    </div>
+  </div>
+
+  <div class="section-label"><div class="section-label-text">&#9632; Noticias Destacadas</div><div class="section-label-line"></div></div>
+  <div class="featured-grid">
+    <div class="featured-card big">
+      <div class="card-img-placeholder"><span style="font-size:48px;opacity:0.15;">&#127950;</span></div>
+      <div class="card-cat">Exclusivo</div>
+      <div class="card-title">CARRERAS CLANDESTINAS EN AUTOPISTA DEL ESTE: LA REALIDAD QUE NADIE QUIERE VER</div>
+      <div class="card-meta"><span>&#128197; Hoy, 8:30 AM</span><span>&#128336; 4 min de lectura</span></div>
+    </div>
+    <div class="featured-card">
+      <div class="card-img-placeholder" style="aspect-ratio:4/3;"><span style="font-size:32px;opacity:0.15;">&#127950;</span></div>
+      <div class="card-cat">MotoGP</div>
+      <div class="card-title">MÁRQUEZ DOMINÓ EL GP DE QATAR CON UNA VUELTA ÉPICA</div>
+      <div class="card-meta"><span>&#128197; Ayer</span></div>
+    </div>
+    <div class="featured-card">
+      <div class="card-img-placeholder" style="aspect-ratio:4/3;"><span style="font-size:32px;opacity:0.15;">&#128664;</span></div>
+      <div class="card-cat">Lanzamiento</div>
+      <div class="card-title">YAMAHA MT-09 2025: TODO LO QUE NECESITAS SABER</div>
+      <div class="card-meta"><span>&#128197; 2 días</span></div>
+    </div>
+  </div>
+
+  <div class="section-label"><div class="section-label-text">&#9632; Video Destacado</div><div class="section-label-line"></div></div>
+  <div class="video-section">
+    <div class="video-placeholder">
+      <div class="play-btn"><div class="play-icon"></div></div>
+      <div class="video-label">Ver en YouTube</div>
+      <div class="video-sublabel">Dominican Racing — Canal Oficial</div>
+    </div>
+  </div>
+
+  <div class="section-label"><div class="section-label-text">&#9632; Artículos Recientes</div><div class="section-label-line"></div></div>
+  <div class="articles-list">
+    <div class="article-item">
+      <div class="art-num">01</div>
+      <div class="art-content">
+        <div class="art-cat">Seguridad Vial</div>
+        <div class="art-title">¿Por qué los motociclistas dominicanos son los más vulnerables del Caribe?</div>
+        <div class="art-meta">&#128197; Hoy · &#128336; 6 min</div>
+      </div>
+    </div>
+    <div class="article-item">
+      <div class="art-num">02</div>
+      <div class="art-content">
+        <div class="art-cat">Superbike</div>
+        <div class="art-title">Bautista confirma su dominio en el mundial con victoria en Phillip Island</div>
+        <div class="art-meta">&#128197; Ayer · &#128336; 3 min</div>
+      </div>
+    </div>
+    <div class="article-item">
+      <div class="art-num">03</div>
+      <div class="art-content">
+        <div class="art-cat">Noticias Virales</div>
+        <div class="art-title">Video: Motociclista escapa de accidente de milagro en la carretera Duarte</div>
+        <div class="art-meta">&#128197; 2 días · &#128336; 2 min</div>
+      </div>
+    </div>
+    <div class="article-item">
+      <div class="art-num">04</div>
+      <div class="art-content">
+        <div class="art-cat">Lanzamientos</div>
+        <div class="art-title">Honda CB650R 2025: La naked más esperada llega con nueva electrónica</div>
+        <div class="art-meta">&#128197; 3 días · &#128336; 5 min</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTICIAS -->
+<div class="section" id="s-noticias">
+  <div class="news-page">
+    <div class="section-label" style="padding:0 0 12px;"><div class="section-label-text">&#9632; Todas las Noticias</div><div class="section-label-line"></div></div>
+    <div class="categories-bar">
+      <div class="cat-pill active">Todas</div>
+      <div class="cat-pill">Carreras Clandestinas</div>
+      <div class="cat-pill">Accidentes</div>
+      <div class="cat-pill">Seguridad Vial</div>
+      <div class="cat-pill">Noticias Virales</div>
+      <div class="cat-pill">MotoGP</div>
+      <div class="cat-pill">Superbike</div>
+      <div class="cat-pill">Internacional</div>
+      <div class="cat-pill">Lanzamientos</div>
+    </div>
+    <div class="news-grid">
+      <div class="news-card">
+        <div class="news-card-img"><span style="font-size:28px;opacity:0.2;position:relative;z-index:1;">&#127950;</span></div>
+        <div class="news-card-body">
+          <div class="news-cat">Carreras Clandestinas</div>
+          <div class="news-title">PISTA ILEGAL EN BOCA CHICA: LO QUE LA POLICÍA NO VIO</div>
+          <div class="news-excerpt">Decenas de motociclistas se reunieron en la madrugada del domingo en lo que se convirtió en...</div>
+          <div class="news-meta"><span>&#128197; Hoy</span><span>&#128336; 5 min</span></div>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-img"><span style="font-size:28px;opacity:0.2;position:relative;z-index:1;">&#127937;</span></div>
+        <div class="news-card-body">
+          <div class="news-cat">MotoGP</div>
+          <div class="news-title">FABIO QUARTARARO: EL RENACER DE UN CAMPEÓN EN APRIETOS</div>
+          <div class="news-excerpt">El francés habló sin tapujos sobre su complicado 2024 y sus expectativas para esta temporada...</div>
+          <div class="news-meta"><span>&#128197; Ayer</span><span>&#128336; 4 min</span></div>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-img"><span style="font-size:28px;opacity:0.2;position:relative;z-index:1;">&#128657;</span></div>
+        <div class="news-card-body">
+          <div class="news-cat">Accidentes</div>
+          <div class="news-title">ACCIDENTE MÚLTIPLE EN LA AUTOPISTA 6 DE NOVIEMBRE: 3 HERIDOS</div>
+          <div class="news-excerpt">Un choque en cadena involucró a dos motociclistas y un camión en las primeras horas de la mañana...</div>
+          <div class="news-meta"><span>&#128197; Ayer</span><span>&#128336; 3 min</span></div>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-img"><span style="font-size:28px;opacity:0.2;position:relative;z-index:1;">&#128664;</span></div>
+        <div class="news-card-body">
+          <div class="news-cat">Lanzamientos</div>
+          <div class="news-title">KTM DUKE 390 2025: MÁS POTENCIA, MISMO PRECIO AGRESIVO</div>
+          <div class="news-excerpt">La marca austriaca presenta una versión renovada de su popular naked con nuevas ayudas...</div>
+          <div class="news-meta"><span>&#128197; 2 días</span><span>&#128336; 4 min</span></div>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-img"><span style="font-size:28px;opacity:0.2;position:relative;z-index:1;">&#128250;</span></div>
+        <div class="news-card-body">
+          <div class="news-cat">Noticias Virales</div>
+          <div class="news-title">VIDEO: EL CABALLITO QUE SE HIZO VIRAL EN TODO EL CARIBE</div>
+          <div class="news-excerpt">Grabado en la avenida Charles de Gaulle, el clip superó el millón de vistas en menos de 24 horas...</div>
+          <div class="news-meta"><span>&#128197; 3 días</span><span>&#128336; 2 min</span></div>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-img"><span style="font-size:28px;opacity:0.2;position:relative;z-index:1;">&#127950;</span></div>
+        <div class="news-card-body">
+          <div class="news-cat">Superbike</div>
+          <div class="news-title">TOPRAK RAZGATLIOGLU: EL LOBO QUE NO SE RINDE</div>
+          <div class="news-excerpt">El turco sigue siendo la amenaza número uno de Bautista en el WorldSBK con una consistencia brutal...</div>
+          <div class="news-meta"><span>&#128197; 3 días</span><span>&#128336; 5 min</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OPINIÓN -->
+<div class="section" id="s-opinion">
+  <div class="opinion-page">
+    <div class="section-label" style="padding:0 0 16px;"><div class="section-label-text">&#9632; Columna de Opinión</div><div class="section-label-line"></div></div>
+    <div class="columnist-header">
+      <div class="columnist-avatar">DR</div>
+      <div class="columnist-info">
+        <span>&#9632; Columna Diaria</span>
+        <h3>La Voz del Asfalto</h3>
+        <p>Análisis directo de la realidad del motor en RD y el mundo</p>
+      </div>
+    </div>
+    <div class="opinion-articles">
+      <div class="opinion-card">
+        <div class="opinion-card-tag">&#9632; Columna de hoy</div>
+        <div class="opinion-card-title">EN REPÚBLICA DOMINICANA, EL CASCO ES OPCIONAL. LA MUERTE, NO.</div>
+        <div class="opinion-card-text">Cada fin de semana suena la misma historia. Un joven en moto, sin casco, cruza una avenida a las 2 de la madrugada y termina en urgencias — o peor. Y nadie habla de eso con la dureza que merece. Seguimos tratando la seguridad vial como si fuera un tema de campañas bonitas y carteles de colores. No lo es. Es una emergencia que tiene nombre, apellido y dirección...</div>
+        <div class="opinion-card-meta">&#128197; Hoy, 7:00 AM · Tiempo de lectura: 6 min</div>
+      </div>
+      <div class="opinion-card">
+        <div class="opinion-card-tag">&#9632; Análisis</div>
+        <div class="opinion-card-title">¿POR QUÉ MOTOGP NO TIENE SEGUIDORES EN EL CARIBE? LA RESPUESTA ES OBVIA.</div>
+        <div class="opinion-card-text">Hay millones de motociclistas en el Caribe. Hay pasión por la velocidad, por las marcas, por la cultura del motor. Y sin embargo, el MotoGP sigue siendo un deporte de nicho en esta región. No es un problema de interés. Es un problema de acceso, de transmisión y de narrativa local...</div>
+        <div class="opinion-card-meta">&#128197; Ayer, 8:00 AM · Tiempo de lectura: 5 min</div>
+      </div>
+      <div class="opinion-card">
+        <div class="opinion-card-tag">&#9632; Opinión directa</div>
+        <div class="opinion-card-title">LAS CARRERAS CLANDESTINAS: NI TAN MALAS, NI TAN BUENAS COMO LAS PINTAN.</div>
+        <div class="opinion-card-text">Sí, son ilegales. Sí, son peligrosas. Pero antes de criminalizarlas por completo, hay que hacerse una pregunta: ¿qué alternativas le da el Estado a esos jóvenes que aman la velocidad? En países con circuitos accesibles y programas de desarrollo, esos mismos chicos estarían compitiendo en pistas. Aquí, compiten en autopistas...</div>
+        <div class="opinion-card-meta">&#128197; 2 días · Tiempo de lectura: 7 min</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEOS -->
+<div class="section" id="s-videos">
+  <div class="videos-page">
+    <div class="section-label" style="padding:0 0 16px;"><div class="section-label-text">&#9632; Galería de Videos</div><div class="section-label-line"></div></div>
+    <div class="video-grid">
+      <div class="video-card" style="grid-column:1/-1;">
+        <div class="video-thumb" style="aspect-ratio:16/9;"><div class="mini-play" style="width:52px;height:52px;"><div class="mini-play-icon" style="border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:16px solid white;"></div></div><div class="video-duration">12:34</div></div>
+        <div class="video-card-body">
+          <div class="video-card-title">ESPECIAL: UNA NOCHE EN LAS CARRERAS CLANDESTINAS DE SANTO DOMINGO</div>
+          <div class="video-card-meta">&#128197; Hoy · &#128065; 48K vistas</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb"><div class="mini-play"><div class="mini-play-icon"></div></div><div class="video-duration">8:21</div></div>
+        <div class="video-card-body">
+          <div class="video-card-title">GP QATAR MOTOGP 2025 — RESUMEN COMPLETO</div>
+          <div class="video-card-meta">&#128197; Ayer · &#128065; 22K vistas</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb"><div class="mini-play"><div class="mini-play-icon"></div></div><div class="video-duration">5:47</div></div>
+        <div class="video-card-body">
+          <div class="video-card-title">YAMAHA R1 VS KAWASAKI ZX-10R — ¿CUÁL GAÑA EN RD?</div>
+          <div class="video-card-meta">&#128197; 2 días · &#128065; 15K vistas</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb"><div class="mini-play"><div class="mini-play-icon"></div></div><div class="video-duration">3:12</div></div>
+        <div class="video-card-body">
+          <div class="video-card-title">ACCIDENTE VIRAL: MOTOCICLISTA SOBREVIVE DE MILAGRO</div>
+          <div class="video-card-meta">&#128197; 3 días · &#128065; 89K vistas</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb"><div class="mini-play"><div class="mini-play-icon"></div></div><div class="video-duration">6:55</div></div>
+        <div class="video-card-body">
+          <div class="video-card-title">HONDA CBR600RR 2025 — PRIMERA PRUEBA EN RD</div>
+          <div class="video-card-meta">&#128197; 4 días · &#128065; 11K vistas</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb"><div class="mini-play"><div class="mini-play-icon"></div></div><div class="video-duration">9:03</div></div>
+        <div class="video-card-body">
+          <div class="video-card-title">SEGURIDAD VIAL: LO QUE TODO MOTORISTA DEBE SABER</div>
+          <div class="video-card-meta">&#128197; 5 días · &#128065; 7K vistas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEGURIDAD VIAL -->
+<div class="section" id="s-seguridad">
+  <div class="seguridad-page">
+    <div class="safety-hero">
+      <h2>&#128738; SEGURIDAD VIAL</h2>
+      <p>Aquí no venimos a moralizarte. Venimos a darte información real para que llegues a casa. Simple.</p>
+    </div>
+    <div class="safety-grid">
+      <div class="safety-card">
+        <div class="safety-icon"><div class="safety-icon-sym">&#9651;</div></div>
+        <h4>El Casco Salva Vidas</h4>
+        <p>No es opcional, es la diferencia entre vivir y no contarlo. Un casco certificado reduce el riesgo de muerte en un 42%. Sin excusas.</p>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon"><div class="safety-icon-sym">&#128065;</div></div>
+        <h4>Velocidad y Entorno</h4>
+        <p>A 80 km/h en ciudad, si algo falla, el tiempo de reacción no alcanza. Conoce el entorno antes de apretar.</p>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon"><div class="safety-icon-sym">&#9992;</div></div>
+        <h4>Mantenimiento Real</h4>
+        <p>Frenos, llantas, cadena. Revísalos antes de salir. Una llanta desinflada a 100 km/h no avisa dos veces.</p>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon"><div class="safety-icon-sym">&#127772;</div></div>
+        <h4>Visibilidad Nocturna</h4>
+        <p>De noche, eres invisible para los carros. Usa ropa reflectiva. No esperes que te vean si no puedes ser visto.</p>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon"><div class="safety-icon-sym">&#127381;</div></div>
+        <h4>Alcohol y Motor</h4>
+        <p>No hay un número seguro. Cero alcohol al manejar. El orgullo no paga el hospital ni compensa lo que pierdes.</p>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon"><div class="safety-icon-sym">&#128246;</div></div>
+        <h4>Sin el Teléfono</h4>
+        <p>Un segundo mirando la pantalla a 60 km/h son 17 metros ciegos. Ese mensaje puede esperar. Tu vida, no.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MUNDO RACING -->
+<div class="section" id="s-racing">
+  <div class="racing-page">
+    <div class="section-label" style="padding:0 0 12px;"><div class="section-label-text">&#9632; Mundo Racing</div><div class="section-label-line"></div></div>
+    <div class="championship-banner">
+      <div class="champ-logo">MOTO<br>GP</div>
+      <div class="champ-info">
+        <span>&#9632; Temporada 2025 en curso</span>
+        <h3>Campeonato Mundial MotoGP</h3>
+        <p>Carrera 3/20 — Clasificación: Márquez 56pts · Bagnaia 47pts · Espargaro 38pts</p>
+      </div>
+    </div>
+    <div class="championship-banner">
+      <div class="champ-logo">WORLD<br>SBK</div>
+      <div class="champ-info">
+        <span>&#9632; Temporada 2025 en curso</span>
+        <h3>Campeonato Mundial Superbike</h3>
+        <p>Ronda 2/13 — Clasificación: Bautista 82pts · Razgatlioglu 74pts · Rea 61pts</p>
+      </div>
+    </div>
+    <div class="section-label" style="padding:12px 0;"><div class="section-label-text">&#9632; Últimas del Circuito</div><div class="section-label-line"></div></div>
+    <div class="racing-news">
+      <div class="racing-item">
+        <div class="racing-item-img"><span style="font-size:18px;opacity:0.2;position:relative;z-index:1;">&#127950;</span></div>
+        <div>
+          <div class="ri-cat">MotoGP</div>
+          <div class="ri-title">MÁRQUEZ CONFIRMA QUE EL DUCATI ES SU MEJOR ARMA EN AÑOS</div>
+          <div class="ri-meta">&#128197; Hoy · 4 min</div>
+        </div>
+      </div>
+      <div class="racing-item">
+        <div class="racing-item-img"><span style="font-size:18px;opacity:0.2;position:relative;z-index:1;">&#127937;</span></div>
+        <div>
+          <div class="ri-cat">Moto2</div>
+          <div class="ri-title">LÓPEZ IMPRESIONA EN SU DEBUT COMO TITULAR EN MOTO2</div>
+          <div class="ri-meta">&#128197; Ayer · 3 min</div>
+        </div>
+      </div>
+      <div class="racing-item">
+        <div class="racing-item-img"><span style="font-size:18px;opacity:0.2;position:relative;z-index:1;">&#128664;</span></div>
+        <div>
+          <div class="ri-cat">Lanzamientos</div>
+          <div class="ri-title">DUCATI PANIGALE V4 R 2026: LA SUPERBIKE MÁS EXTREMA DEL MERCADO</div>
+          <div class="ri-meta">&#128197; 2 días · 5 min</div>
+        </div>
+      </div>
+      <div class="racing-item">
+        <div class="racing-item-img"><span style="font-size:18px;opacity:0.2;position:relative;z-index:1;">&#127950;</span></div>
+        <div>
+          <div class="ri-cat">WorldSBK</div>
+          <div class="ri-title">REA ADMITE QUE EL NUEVO KAWASAKI NO ES SUFICIENTE PARA GANAR EL TITULO</div>
+          <div class="ri-meta">&#128197; 3 días · 4 min</div>
+        </div>
+      </div>
+      <div class="racing-item">
+        <div class="racing-item-img"><span style="font-size:18px;opacity:0.2;position:relative;z-index:1;">&#127937;</span></div>
+        <div>
+          <div class="ri-cat">Moto3</div>
+          <div class="ri-title">NUEVA GENERACIÓN: LOS 5 PILOTOS DE MOTO3 QUE DOMINARÁN EL FUTURO</div>
+          <div class="ri-meta">&#128197; 4 días · 6 min</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOBRE NOSOTROS -->
+<div class="section" id="s-sobre">
+  <div class="about-page">
+    <div class="about-hero">
+      <h2>Dominican Racing</h2>
+      <p>Somos una plataforma digital dedicada a mostrar la realidad del mundo motor en la República Dominicana y el motociclismo internacional, combinando información, entretenimiento y opinión. Publicamos noticias, videos y artículos escritos diarios, incluyendo cobertura de MotoGP, Superbike y lanzamientos de motocicletas, con el objetivo de crear conciencia sin dejar de mostrar lo que ocurre en las calles y en las pistas.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-box"><div class="stat-num">50K+</div><div class="stat-label">Seguidores</div></div>
+      <div class="stat-box"><div class="stat-num">365</div><div class="stat-label">Días al año</div></div>
+      <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Sin filtros</div></div>
+    </div>
+    <div class="about-mission">
+      <h3>&#9632; Nuestra Misión</h3>
+      <p>Dominican Racing nació de la necesidad de darle voz a una comunidad que ama las motos, que vive el motor a diario, y que merecía un medio propio. Cubrimos lo que los medios tradicionales ignoran: las carreras clandestinas, los accidentes reales, el motociclismo callejero dominicano, y al mismo tiempo llevamos la cobertura del MotoGP, el WorldSBK y las últimas novedades del sector. Sin hipocresía, sin moralismo vacío, con información real y análisis directo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTO -->
+<div class="section" id="s-contacto">
+  <div class="contact-page">
+    <div class="section-label" style="padding:0 0 16px;"><div class="section-label-text">&#9632; Contáctanos</div><div class="section-label-line"></div></div>
+    <div class="contact-form">
+      <h2>Envíanos tu historia</h2>
+      <div class="form-group">
+        <label class="form-label">Nombre</label>
+        <input class="form-input" type="text" placeholder="Tu nombre completo">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input class="form-input" type="email" placeholder="tu@correo.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Asunto</label>
+        <input class="form-input" type="text" placeholder="Noticia, denuncia, opinión...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mensaje</label>
+        <textarea class="form-input" placeholder="Cuéntanos todo. Sin filtros."></textarea>
+      </div>
+      <button class="submit-btn">&#9132; Enviar Mensaje</button>
+    </div>
+    <div class="social-links">
+      <h3>Síguenos en Redes</h3>
+      <div class="social-grid">
+        <div class="social-btn">&#9654; YouTube</div>
+        <div class="social-btn">&#9632; Instagram</div>
+        <div class="social-btn">&#9632; Facebook</div>
+        <div class="social-btn">&#9654; TikTok</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">DOMINICAN <span>RACING</span></div>
+  <div class="footer-copy">&#169; 2025 Dominican Racing — El mundo motor sin filtros</div>
+  <div class="footer-links">
+    <span class="footer-link">Términos</span>
+    <span class="footer-link">Privacidad</span>
+    <span class="footer-link">Publicidad</span>
+  </div>
+</footer>
+</div>
+
+<script>
+function showSection(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-' + name).classList.add('active');
+  btn.classList.add('active');
+  document.querySelector('.site').scrollTop = 0;
+}
+document.querySelectorAll('.cat-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+  });
+});
+const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const now = new Date();
+document.getElementById('nav-date').textContent = days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()] + ' ' + now.getFullYear();
+</script>
